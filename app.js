@@ -21,9 +21,6 @@ app.get('/', (req, res) => {
 });
 
 // นำเข้าและใช้งาน routes
-const authRoute = require('./routes/auth');
-app.use('/api/auth', authRoute);
-
 const productRoute = require('./routes/products'); // ตรวจสอบเส้นทางและการสะกดคำ
 app.use('/api/products', productRoute);
 

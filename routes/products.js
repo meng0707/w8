@@ -12,13 +12,31 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/products/:id
+router.get('/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id); // ค้นหาผลิตภัณฑ์ตาม id
+
+    if (!product) {
+      return res.status(404).send('Product not found'); // ถ้าไม่พบผลิตภัณฑ์
+    }
+    
+    res.json(product); // ส่งข้อมูลผลิตภัณฑ์กลับ
+  } catch (err) {
+    res.status(500).send(err.message); // จัดการข้อผิดพลาด
+  }
+});
+
 // POST /api/products
 router.post('/', async (req, res) => {
   try {
-    const { name, price, description } = req.body;
+    const { name, price, tell, email, description } = req.body;
     const newProduct = new Product({
       name,
       price,
+      tell,
+      email,
       description
     });
     await newProduct.save();
@@ -32,10 +50,10 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
       const { id } = req.params;
-      const { name, price, description } = req.body;
+      const { name, price, tell, email,  description } = req.body;
       const updatedProduct = await Product.findByIdAndUpdate(
         id,
-        { name, price, description },
+        { name, price, tell, email, description },
         { new: true, runValidators: true }
       );
       if (!updatedProduct) {
@@ -46,7 +64,8 @@ router.put('/:id', async (req, res) => {
       res.status(500).send(err.message);
     }
   });
-  // DELETE /api/products/:id
+
+// DELETE /api/products/:id
 router.delete('/:id', async (req, res) => {
     try {
       const { id } = req.params;
